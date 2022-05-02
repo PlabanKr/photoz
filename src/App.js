@@ -6,16 +6,19 @@ import "./App.css";
 import SignupPage from "./pages/SignupPage";
 import SigninPage from "./pages/SigninPage";
 import AddImagePage from "./pages/AddImagePage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<HomePage />} />
-        <Route path="profile" element={<ProfilePage />} />
         <Route path="signup" element={<SignupPage />} />
         <Route path="signin" element={<SigninPage />} />
-        <Route path="add-img" element={<AddImagePage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="add-img" element={<AddImagePage />} />
+        </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
