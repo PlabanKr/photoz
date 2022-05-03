@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { account } from "../services/appwrite.config";
 import Navbar from "../components/Navbar";
 
@@ -11,7 +18,10 @@ const SignupPage = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const signUp = async () => {
+    setLoading(true);
     try {
       await account.create(
         "unique()",
@@ -36,54 +46,60 @@ const SignupPage = () => {
       <Navbar />
       <Container className="topMargin10">
         <Stack alignItems="center" justify="center">
-          <Typography variant="h5">Sign up</Typography>
-          <form noValidate>
-            <TextField
-              id="name"
-              label="Name"
-              type="text"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              onChange={(event) => {
-                setUserDetail({
-                  ...userDetail,
-                  name: event.target.value,
-                });
-              }}
-            />
-            <TextField
-              id="email"
-              label="Email"
-              type="email"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              onChange={(event) => {
-                setUserDetail({
-                  ...userDetail,
-                  email: event.target.value,
-                });
-              }}
-            />
-            <TextField
-              id="password"
-              label="Password"
-              type="password"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              onChange={(event) => {
-                setUserDetail({
-                  ...userDetail,
-                  password: event.target.value,
-                });
-              }}
-            />
-          </form>
-          <Button variant="contained" size="large" onClick={signUp}>
-            Sign up
-          </Button>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <Typography variant="h5">Sign up</Typography>
+              <form noValidate>
+                <TextField
+                  id="name"
+                  label="Name"
+                  type="text"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  onChange={(event) => {
+                    setUserDetail({
+                      ...userDetail,
+                      name: event.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  onChange={(event) => {
+                    setUserDetail({
+                      ...userDetail,
+                      email: event.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  onChange={(event) => {
+                    setUserDetail({
+                      ...userDetail,
+                      password: event.target.value,
+                    });
+                  }}
+                />
+              </form>
+              <Button variant="contained" size="large" onClick={signUp}>
+                Sign up
+              </Button>
+            </>
+          )}
         </Stack>
       </Container>
     </>

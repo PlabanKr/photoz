@@ -3,25 +3,22 @@ import {
   Card,
   CardActions,
   CardMedia,
-  Container,
+  // Container,
   IconButton,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+// import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteImage } from "../services/database.api";
 
-const ImageCard = () => {
+const ImageCard = ({ id, url, userID }) => {
   return (
     <Card>
-      <CardMedia
-        component="img"
-        height="400"
-        image="https://images.unsplash.com/photo-1561037404-61cd46aa615b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-      />
+      <CardMedia component="img" height="400" image={url} />
       <CardActions>
-        <IconButton size="small">
+        {/* <IconButton size="small">
           <FavoriteIcon color="secondary" />
-        </IconButton>
-        <IconButton size="small">
+        </IconButton> */}
+        <IconButton size="small" onClick={() => deleteImage(id)}>
           <DeleteIcon color="error" />
         </IconButton>
         <Button size="small">Info</Button>

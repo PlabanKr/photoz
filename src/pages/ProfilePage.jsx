@@ -9,22 +9,37 @@ import {
   Typography,
 } from "@mui/material";
 import { account } from "../services/appwrite.config";
+import { fetchImagesByUser } from "../services/database.api";
 import ImageShowcase from "../components/ImageShowcase";
 import Navbar from "../components/Navbar";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+  const handleNavigation = (link) => {
+    navigate(link);
+  };
+
   const [userDetails, setUserDetails] = useState({});
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
-    async function getUserData() {
-      try {
-        const userData = await account.get();
-        setUserDetails(userData);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    fetchImagesByUser(userDetails.$id)
+      .then((r) => r.documents)
+      .then((imgs) => {
+        setImages([...imgs]);
+      });
+  }, [images]);
 
+  async function getUserData() {
+    try {
+      const userData = await account.get();
+      setUserDetails(userData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
     getUserData();
   }, []);
 
@@ -37,10 +52,6 @@ const ProfilePage = () => {
     }
   };
 
-  const navigate = useNavigate();
-  const handleNavigation = (link) => {
-    navigate(link);
-  };
   return (
     <>
       <Navbar />
@@ -75,7 +86,7 @@ const ProfilePage = () => {
 
         <StepConnector className="yMargin2" />
 
-        <ImageShowcase />
+        <ImageShowcase images={images} />
       </Container>
     </>
   );

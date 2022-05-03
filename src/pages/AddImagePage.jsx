@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -8,11 +9,37 @@ import {
   Typography,
 } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { account } from "../services/appwrite.config";
+import { createImage } from "../services/database.api";
 
 const AddImagePage = () => {
   const navigate = useNavigate();
   const handleNavigation = (link) => {
     navigate(link);
+  };
+
+  const [userDetails, setUserDetails] = useState({});
+  const [imageDetails, setImageDetails] = useState({
+    title: "",
+    url: "",
+  });
+
+  async function getUserData() {
+    try {
+      const userData = await account.get();
+      setUserDetails(userData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const addImage = () => {
+    createImage(imageDetails.title, imageDetails.url, userDetails.$id);
+    handleNavigation("/profile");
   };
   return (
     <>
@@ -36,6 +63,12 @@ const AddImagePage = () => {
               variant="outlined"
               margin="normal"
               fullWidth
+              onChange={(event) => {
+                setImageDetails({
+                  ...imageDetails,
+                  title: event.target.value,
+                });
+              }}
             />
             <TextField
               id="url"
@@ -44,9 +77,15 @@ const AddImagePage = () => {
               variant="outlined"
               margin="normal"
               fullWidth
+              onChange={(event) => {
+                setImageDetails({
+                  ...imageDetails,
+                  url: event.target.value,
+                });
+              }}
             />
           </form>
-          <Button variant="contained" size="large">
+          <Button variant="contained" size="large" onClick={addImage}>
             Add Image
           </Button>
         </Stack>

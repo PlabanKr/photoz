@@ -6,16 +6,16 @@ import SignupPage from "./pages/SignupPage";
 const ProtectedRoute = () => {
   const [userDetails, setUserDetails] = useState({});
 
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const userData = await account.get();
-        setUserDetails(userData);
-      } catch (error) {
-        console.error(error);
-      }
+  async function getUserData() {
+    try {
+      const userData = await account.get();
+      setUserDetails(userData);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
+  useEffect(() => {
     getUserData();
   }, []);
 

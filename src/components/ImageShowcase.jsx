@@ -1,15 +1,16 @@
 import { Grid } from "@mui/material";
 import ImageCard from "../components/ImageCard";
 
-const ImageShowcase = () => {
-  const fakeData = ["a", "b", "c", "d", "e", "f"];
+const ImageShowcase = ({ images }) => {
   return (
     <Grid container spacing={2}>
-      {fakeData.map((data, index) => (
-        <Grid item xs={12} md={6} key={index}>
-          <ImageCard />
-        </Grid>
-      ))}
+      {images.map((data, index) => {
+        return (
+          <Grid item xs={12} md={6} key={index}>
+            <ImageCard id={data.$id} url={data.url} userID={data.user_id} />
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };
