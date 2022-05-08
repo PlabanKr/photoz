@@ -8,7 +8,7 @@ import {
   StepConnector,
   Typography,
 } from "@mui/material";
-import { account } from "../services/appwrite.config";
+import { account, avatar } from "../services/appwrite.config";
 import { fetchImagesByUser } from "../services/database.api";
 import ImageShowcase from "../components/ImageShowcase";
 import Navbar from "../components/Navbar";
@@ -21,6 +21,7 @@ const ProfilePage = () => {
 
   const [userDetails, setUserDetails] = useState({});
   const [images, setImages] = useState([]);
+  const [userAvatar, setUserAvatar] = useState();
 
   useEffect(() => {
     fetchImagesByUser(userDetails.$id)
@@ -28,19 +29,25 @@ const ProfilePage = () => {
       .then((imgs) => {
         setImages([...imgs]);
       });
-  }, [images]);
+  }, [images, userDetails.$id]);
 
-  async function getUserData() {
+  const getUserData = async () => {
     try {
       const userData = await account.get();
       setUserDetails(userData);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  const getAvatar = async () => {
+    let res = await avatar.getInitials();
+    setUserAvatar(res.href);
+  };
 
   useEffect(() => {
     getUserData();
+    getAvatar();
   }, []);
 
   const deleteAccount = async () => {
@@ -57,11 +64,7 @@ const ProfilePage = () => {
       <Navbar />
       <Container className="topMargin5">
         <Stack spacing={2} justifyContent="center" alignItems="center">
-          <Avatar
-            alt="User"
-            sx={{ width: 180, height: 180 }}
-            src="https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
-          />
+          <Avatar alt="User" sx={{ width: 180, height: 180 }} src={userAvatar} />
           <Typography variant="h3">{userDetails.name}</Typography>
           <Typography variant="p">{userDetails.email}</Typography>
         </Stack>
